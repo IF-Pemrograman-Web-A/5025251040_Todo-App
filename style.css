@@ -52,7 +52,7 @@ li {
     margin-bottom: 10px;
 }
 
-input[type="text"], input[type="date"] button {
+input[type="text"], input[type="date"], button {
     padding: 8px;
     margin-top: 5px;
     width: 100%;

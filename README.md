@@ -18,7 +18,7 @@ Panel website terbagi menjadi 2
 Menyertakan form yang digunakan untuk menambahkan daftar tugas terbaru
 
 ## Hasil Program 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/01dafbc4-d4c3-45af-9d65-ce434ce3e357" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/14ef64c6-6357-4f0d-9877-6ed3708f23ac" />
 
 ## Penjelasan Program 
 index.html

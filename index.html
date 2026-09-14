@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> To Do List Mahasiswa Informatika </title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+  	
+    <body>
+        <header>
+            <h1>To Do List Mahasiswa</h1>
+        </header>
+        
+        <main>
+            <aside class="panel-kiri">
+                <h3> Daftar Penugasan </h3>
+                <ul>
+                    <li> <input type="checkbox"> Tugas Pemrograman Web </li>
+                    <li> <input type="checkbox"> Tugas Matematika Diskrit </li>
+                    <li> <input type="checkbox"> Tugas Teori Graf </li>
+                    <li> <input type="checkbox"> Tugas KKA </li>
+                    <li> <input type="checkbox"> Tugas KPPL </li>
+                    <li> <input type="checkbox"> Tugas Jaringan Komputer </li>
+                </ul> 
+
+                <hr>
+
+                <form>
+                    <p>
+                        <label for="nama-tugas"> Nama Tugas : </label>
+                        <input type="text" id="nama-tugas">
+                    </p>
+                    <p>
+                        <label for="tanggal"> Deadline : </label>
+                        <input type="date" id="tanggal">
+                    </p>
+                    <p>
+                        <label for="deskripsi"> Deskripsi : </label>
+                        <input type="text" id="deskripsi">
+                    </p>
+                    <button type="submit"> Tambah daftar tugas </button> 
+                </form>
+
+            </aside>
+
+            <aside class="panel-kanan">
+                <h3> Deskripsi Tugas </h3>
+                <p>
+                    [E01a] The Style Warrior
+                    <br> Anda adalah seorang Style Warrior. Buatlah antarmuka pengguna (UI) statis dengan tata letak yang jelas dan responsif hanya menggunakan HTML dan CSS!
+                    <br> Tugas Anda adalah membuat halaman web Daftar Tugas (Todo List) dengan kriteria berikut:
+                    <ul>
+                    <li> 1. Buat halaman menggunakan elemen semantik HTML (header, main, aside, dan footer)</li>
+                    <li> 2. Bagi konten menjadi dua panel: panel kiri untuk daftar tugas dan panel kanan untuk editor/detail tugas. Wajib menggunakan Flexbox atau Grid</li>
+                    <li> 3. Buat komponen formulir terpisah untuk menambahkan tugas baru</li>
+                    <li> 4. Gunakan daftar tugas statis dengan data dummy</li>
+                    <li> 5. Antarmuka pengguna harus responsif, baik untuk tampilan desktop maupun seluler</li>
+                    <li> 6. Gunakan gaya (style) eksternal</li>
+                    </ul>
+                    <br> Output: file index.html dan style.css
+                </p>
+            </aside>
+        </main>
+    </body>
+	     
+    <footer>
+        <div id="semangatberkuliah"> Semangat Berkuliah! </div>
+    </footer>
+
+</html>

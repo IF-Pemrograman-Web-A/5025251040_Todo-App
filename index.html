@@ -1,69 +1,137 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title> To Do List Mahasiswa Informatika </title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-  	
-    <body>
-        <header>
-            <h1>To Do List Mahasiswa</h1>
-        </header>
-        
-        <main>
-            <aside class="panel-kiri">
-                <h3> Daftar Penugasan </h3>
-                <ul>
-                    <li> <input type="checkbox"> Tugas Pemrograman Web </li>
-                    <li> <input type="checkbox"> Tugas Matematika Diskrit </li>
-                    <li> <input type="checkbox"> Tugas Teori Graf </li>
-                    <li> <input type="checkbox"> Tugas KKA </li>
-                    <li> <input type="checkbox"> Tugas KPPL </li>
-                    <li> <input type="checkbox"> Tugas Jaringan Komputer </li>
-                </ul> 
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="To Do List Mahasiswa Informatika untuk mengelola tugas, gambar tugas, dan pengingat.">
+    <meta name="theme-color" content="#2c3e50">
+    <title>To Do List Mahasiswa Informatika</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-                <hr>
+<body>
+    <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
 
-                <form>
-                    <p>
-                        <label for="nama-tugas"> Nama Tugas : </label>
-                        <input type="text" id="nama-tugas">
-                    </p>
-                    <p>
-                        <label for="tanggal"> Deadline : </label>
-                        <input type="date" id="tanggal">
-                    </p>
-                    <p>
-                        <label for="deskripsi"> Deskripsi : </label>
-                        <input type="text" id="deskripsi">
-                    </p>
-                    <button type="submit"> Tambah daftar tugas </button> 
-                </form>
+    <header>
+        <h1>To Do List Mahasiswa</h1>
+        <button
+            id="theme-toggle"
+            class="btn-theme"
+            type="button"
+            aria-label="Ubah tampilan terang atau gelap"
+            aria-pressed="false">
+            🌙 Mode Gelap
+        </button>
+        <p id="storage-status" class="sr-only" aria-live="polite"></p>
+    </header>
 
-            </aside>
+    <main id="main-content">
+        <section class="panel-kiri" aria-labelledby="task-heading">
+            <h2 id="task-heading">Daftar Penugasan</h2>
+            <p id="task-help">Tambahkan tugas menggunakan formulir di bawah. Data tersimpan di browser.</p>
 
-            <aside class="panel-kanan">
-                <h3> Deskripsi Tugas </h3>
-                <p>
-                    [E01a] The Style Warrior
-                    <br> Anda adalah seorang Style Warrior. Buatlah antarmuka pengguna (UI) statis dengan tata letak yang jelas dan responsif hanya menggunakan HTML dan CSS!
-                    <br> Tugas Anda adalah membuat halaman web Daftar Tugas (Todo List) dengan kriteria berikut:
-                    <ul>
-                    <li> 1. Buat halaman menggunakan elemen semantik HTML (header, main, aside, dan footer)</li>
-                    <li> 2. Bagi konten menjadi dua panel: panel kiri untuk daftar tugas dan panel kanan untuk editor/detail tugas. Wajib menggunakan Flexbox atau Grid</li>
-                    <li> 3. Buat komponen formulir terpisah untuk menambahkan tugas baru</li>
-                    <li> 4. Gunakan daftar tugas statis dengan data dummy</li>
-                    <li> 5. Antarmuka pengguna harus responsif, baik untuk tampilan desktop maupun seluler</li>
-                    <li> 6. Gunakan gaya (style) eksternal</li>
-                    </ul>
-                    <br> Output: file index.html dan style.css
-                </p>
-            </aside>
-        </main>
-    </body>
-	     
+            <ul id="task-list" aria-live="polite" aria-label="Daftar tugas"></ul>
+
+            <hr>
+
+            <form id="task-form">
+                <h3>Tambah Tugas</h3>
+
+                <div class="form-group">
+                    <label for="nama-tugas">Nama Tugas <span aria-hidden="true">*</span></label>
+                    <input
+                        type="text"
+                        id="nama-tugas"
+                        name="nama-tugas"
+                        placeholder="Masukkan nama tugas"
+                        autocomplete="off"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tanggal">Deadline</label>
+                    <input type="date" id="tanggal" name="tanggal">
+                </div>
+
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi</label>
+                    <textarea
+                        id="deskripsi"
+                        name="deskripsi"
+                        rows="4"
+                        placeholder="Masukkan deskripsi tugas"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="notifikasi">Waktu Notifikasi</label>
+                    <input
+                        type="datetime-local"
+                        id="notifikasi"
+                        name="notifikasi"
+                        aria-describedby="notification-help">
+                    <small id="notification-help">
+                        Pilih waktu untuk mendapatkan notifikasi pengingat. Izin notifikasi browser diperlukan.
+                    </small>
+                </div>
+
+                <fieldset class="camera-fieldset">
+                    <legend>Gambar Tugas</legend>
+                    <p id="camera-help">Gunakan kamera perangkat untuk mengambil gambar yang berkaitan dengan tugas.</p>
+
+                    <div class="camera-controls">
+                        <button type="button" id="start-camera" class="secondary-btn">
+                            Buka Kamera
+                        </button>
+                        <button type="button" id="capture-photo" class="secondary-btn" disabled>
+                            Ambil Gambar
+                        </button>
+                        <button type="button" id="stop-camera" class="secondary-btn" disabled>
+                            Tutup Kamera
+                        </button>
+                    </div>
+
+                    <video
+                        id="camera-preview"
+                        class="camera-preview"
+                        autoplay
+                        playsinline
+                        muted
+                        aria-label="Pratinjau kamera"
+                        hidden></video>
+
+                    <canvas id="photo-canvas" hidden></canvas>
+
+                    <div id="photo-preview-container" class="photo-preview-container" hidden>
+                        <p>Gambar yang akan disimpan:</p>
+                        <img id="photo-preview" alt="Pratinjau gambar tugas yang diambil">
+                        <button type="button" id="remove-photo" class="btn-delete">Hapus Gambar</button>
+                    </div>
+
+                    <p id="camera-status" class="status-message" aria-live="polite"></p>
+                </fieldset>
+
+                <button type="submit" id="add-btn" class="primary-btn">
+                    Tambah Daftar Tugas
+                </button>
+
+                <p id="form-status" class="status-message" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section
+            class="panel-kanan"
+            id="panel-deskripsi"
+            aria-labelledby="detail-heading"
+            aria-live="polite">
+            <h2 id="detail-heading">Deskripsi Tugas</h2>
+            <p>Silakan pilih tombol <strong>Edit</strong> pada daftar tugas untuk melihat dan mengubah detail tugas.</p>
+        </section>
+    </main>
+
     <footer>
-        <div id="semangatberkuliah"> Semangat Berkuliah! </div>
+        <p id="semangatberkuliah">Semangat Berkuliah!</p>
     </footer>
 
+    <script src="script.js"></script>
+</body>
 </html>

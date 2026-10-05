@@ -177,4 +177,4 @@ CSS juga diperbarui agar aplikasi dapat digunakan pada berbagai ukuran layar. Pa
 }
 ```
 
-Dengan demikian, aplikasi tetap nyaman digunakan pada laptop maupun perangkat mobile.
+Sehingga, aplikasi nyaman digunakan pada laptop maupun perangkat mobile.

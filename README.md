@@ -2,8 +2,6 @@
 Nurmaida Intan Permadani
 Teknik Informatika
 
-# Deskripsi Tugas
-
 # To Do List Mahasiswa Informatika (PHP + MySQL)
 
 Aplikasi To Do List yang dikembangkan dari versi HTML/JavaScript menjadi aplikasi web berbasis **PHP** dan **MySQL**, sehingga tidak hanya digunakan secara personal tetapi juga dapat dibagikan dalam sebuah organisasi.

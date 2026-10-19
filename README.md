@@ -61,13 +61,6 @@ Relasi: satu pengguna dapat memiliki banyak tugas (`tasks.user_id` → `users.id
 | Update | Tombol **Edit** (`?edit=ID`) → `UPDATE` di `actions.php` |
 | Delete | Tombol **Delete** dengan konfirmasi → `DELETE` di `actions.php` |
 
-## Keamanan
-
-- **Prepared statement (PDO)** untuk mencegah SQL Injection.
-- **`htmlspecialchars`** (fungsi `e()`) untuk mencegah XSS.
-- **Token CSRF** pada setiap form POST.
-- Validasi upload: tipe file asli (`finfo`), batas ukuran, dan nama file acak.
-
 ## Cara Menjalankan
 
 1. Install **Laragon** atau **XAMPP**, lalu nyalakan Apache dan MySQL.

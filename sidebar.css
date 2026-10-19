@@ -1,0 +1,85 @@
+/* sidebar.css : tambahan untuk layout sidebar & elemen PHP.
+   Dimuat setelah style.css (style.css lama tetap dipakai). */
+
+.layout {
+    display: flex;
+    align-items: flex-start;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.layout main {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar {
+    width: 230px;
+    flex-shrink: 0;
+    margin: 20px 0 20px 20px;
+    padding: 16px;
+    background: #2c3e50;
+    color: #fff;
+    border-radius: 8px;
+}
+
+.menu a {
+    display: block;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.menu a:hover { background: #34495e; }
+.menu a.active { background: #1769aa; }
+.menu a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+.user-switch { margin-top: 24px; }
+.user-switch label { display: block; margin-bottom: 6px; }
+.user-switch select { width: 100%; padding: 8px; border-radius: 4px; min-height: 44px; }
+
+.inline-form { display: inline; }
+
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    min-height: 44px;
+}
+
+.task-text { display: flex; flex-direction: column; min-width: 0; }
+.task-info .inline-form input[type="checkbox"] { margin-top: 4px; }
+
+.check-label { display: flex; align-items: center; gap: 8px; margin: 8px 0; cursor: pointer; }
+.check-label input { min-height: 0; width: 20px; height: 20px; }
+
+.photo-preview {
+    display: block;
+    max-width: 100%;
+    max-height: 300px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+}
+
+.status-message.ok { color: #1b6e3a; font-weight: bold; }
+body.dark-mode .status-message.ok { color: #8be0a8; }
+
+input[type="file"] { display: block; width: 100%; margin-top: 6px; padding: 8px; }
+
+body.dark-mode .sidebar { background: #1f2d3a; }
+body.dark-mode .panel-kiri a:not(.btn-edit),
+body.dark-mode .panel-kanan a:not(.btn-edit) { color: #8ec9ff; }
+body.dark-mode select { background: #444; color: #fff; }
+
+@media (max-width: 768px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: auto; margin: 12px 12px 0; }
+    .menu { display: flex; gap: 8px; }
+    .menu li { flex: 1; }
+    .menu a { text-align: center; margin-bottom: 0; }
+    .layout main { width: 100%; }
+}

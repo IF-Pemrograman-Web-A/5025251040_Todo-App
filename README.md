@@ -4,177 +4,80 @@ Teknik Informatika
 
 # Deskripsi Tugas
 
-Pada tugas ini, aplikasi **To Do List Mahasiswa Informatika** dikembangkan dengan menambahkan beberapa fitur sesuai dengan kriteria Web API dan accessibility. Data todo yang sebelumnya hanya disimpan sementara pada JavaScript kini disimpan menggunakan **IndexedDB**, sedangkan preferensi pengguna seperti mode terang dan gelap disimpan menggunakan **localStorage**. Aplikasi juga dilengkapi fitur pengambilan gambar tugas menggunakan kamera melalui **Media Capture API** serta fitur waktu pengingat tugas menggunakan **Notification API dan Service Worker**.
+# To Do List Mahasiswa Informatika (PHP + MySQL)
 
-Selain itu, tampilan dan komponen aplikasi diperbaiki agar lebih **accessible**, seperti penggunaan semantic HTML, label pada input, ARIA attributes, keyboard focus, skip link, alternative text pada gambar, serta responsive design. Dengan penambahan tersebut, aplikasi tidak hanya dapat digunakan untuk mengelola tugas, tetapi juga memiliki penyimpanan data yang lebih baik, fitur kamera dan notifikasi, serta lebih mudah digunakan oleh berbagai pengguna.
+Aplikasi To Do List yang dikembangkan dari versi HTML/JavaScript menjadi aplikasi web berbasis **PHP** dan **MySQL**, sehingga tidak hanya digunakan secara personal tetapi juga dapat dibagikan dalam sebuah organisasi.
 
-# Pembahasan Kode
+## Deskripsi Tugas
 
-## 1. IndexedDB untuk Penyimpanan Data Todo
+Pada tugas ini, Todo App yang sebelumnya menyimpan data di browser (IndexedDB) dikembangkan dengan ketentuan berikut:
 
-Pada implementasi sebelumnya, data tugas disimpan dalam variabel `tasks`. Pada versi terbaru, penyimpanan tersebut diganti menggunakan IndexedDB agar data tetap tersimpan meskipun halaman di-refresh.
+1. Menambahkan **menu bar/sidebar** dengan dua menu: **Personal** dan **Shared**.
+2. Mengubah HTML ke **PHP** dan membuatnya **modular** (`menubar.php`, `config.php`, `content.php`, dll).
+3. Membuat struktur database beserta data dummy dan menyimpannya dalam **`data.sql`**.
+4. Mengimplementasikan **CRUD** menggunakan PHP.
+5. Menambahkan **file handling** (upload gambar tugas) menggunakan PHP.
 
-```javascript
-const DB_NAME = "todo-mahasiswa-db";
-const DB_VERSION = 1;
-const STORE_NAME = "tasks";
-```
+## Fitur
 
-Database dibuka menggunakan `indexedDB.open()`, kemudian dibuat object store `tasks` dengan `id` sebagai key. Fungsi seperti `saveTask()`, `getAllTasks()`, dan `removeTaskFromDB()` digunakan untuk menambah, mengambil, dan menghapus data tugas.
+- **Personal**: tugas pribadi, hanya terlihat oleh pemiliknya.
+- **Shared**: tugas bersama, terlihat oleh semua anggota. Semua anggota dapat mengubah, tetapi hanya pembuat tugas yang dapat menghapus.
+- CRUD tugas: tambah, lihat, ubah, hapus, dan tandai selesai.
+- Upload gambar tugas (JPG/PNG/WEBP, maks. 2 MB), termasuk pengambilan foto lewat kamera.
+- Notifikasi pengingat (aktif selama halaman terbuka).
+- Mode terang/gelap dan tampilan responsif.
+- Pemilih pengguna di sidebar ("Masuk sebagai") untuk mensimulasikan banyak pengguna tanpa sistem login.
 
-Setiap tugas sekarang menyimpan beberapa informasi, yaitu `name`, `deadline`, `desc`, `completed`, `image`, dan `notificationTime`.
+## Struktur File
 
----
+| File | Penjelasan |
+|---|---|
+| `index.php` | Front controller. Menentukan halaman (`personal`/`shared`) dan mode edit, lalu memanggil file lain secara berurutan. |
+| `config.php` | Konfigurasi koneksi database (PDO), session, serta fungsi bantu: `e()` untuk escape output, token CSRF, flash message, dan pengambilan pengguna aktif. |
+| `actions.php` | Memproses semua aksi POST: `create`, `update`, `delete`, `toggle`, dan `switch_user`, termasuk validasi dan penanganan upload file. |
+| `header.php` | Bagian pembuka HTML (`<head>`, judul, tombol tema) dan pembuka layout. |
+| `menubar.php` | Sidebar berisi menu **Personal** dan **Shared** serta pemilih pengguna. |
+| `content.php` | Konten utama: daftar tugas (Read) dan form tambah/edit (Create/Update). |
+| `partial_image_input.php` | Potongan form upload gambar dan kamera, dipakai ulang di form tambah dan edit. |
+| `footer.php` | Penutup layout, footer, dan pemanggilan `script.js`. |
+| `data.sql` | Struktur database (`users`, `tasks`) beserta data dummy. |
+| `style.css` | Gaya utama aplikasi (dari versi sebelumnya). |
+| `sidebar.css` | Gaya tambahan untuk sidebar dan elemen baru. |
+| `script.js` | JavaScript sisi klien: mode gelap, kamera, dan notifikasi pengingat. |
+| `uploads/` | Folder penyimpanan gambar tugas (dibuat otomatis saat upload pertama). |
 
-## 2. localStorage untuk Light/Dark Mode
+## Struktur Database
 
-Preferensi tampilan pengguna disimpan menggunakan `localStorage`. Key yang digunakan adalah:
+**users**: `id`, `name`, `email`, `created_at`
 
-```javascript
-const THEME_KEY = "todo-theme";
-```
+**tasks**: `id`, `user_id` (relasi ke `users`), `scope` (`personal`/`shared`), `title`, `description`, `deadline`, `notification_time`, `image`, `completed`, `created_at`, `updated_at`
 
-Ketika pengguna mengganti mode tampilan, nilai tema disimpan menggunakan:
+Relasi: satu pengguna dapat memiliki banyak tugas (`tasks.user_id` → `users.id`, `ON DELETE CASCADE`).
 
-```javascript
-localStorage.setItem(THEME_KEY, "dark");
-```
+## Implementasi CRUD
 
-atau:
+| Operasi | Cara |
+|---|---|
+| Create | Form tambah tugas → `INSERT` di `actions.php` |
+| Read | `SELECT` di `content.php` (difilter berdasarkan `scope` dan pengguna) |
+| Update | Tombol **Edit** (`?edit=ID`) → `UPDATE` di `actions.php` |
+| Delete | Tombol **Delete** dengan konfirmasi → `DELETE` di `actions.php` |
 
-```javascript
-localStorage.setItem(THEME_KEY, "light");
-```
+## Keamanan
 
-Kemudian ketika halaman dibuka kembali, aplikasi membaca nilai tersebut sehingga pilihan Light/Dark Mode pengguna tetap tersimpan.
+- **Prepared statement (PDO)** untuk mencegah SQL Injection.
+- **`htmlspecialchars`** (fungsi `e()`) untuk mencegah XSS.
+- **Token CSRF** pada setiap form POST.
+- Validasi upload: tipe file asli (`finfo`), batas ukuran, dan nama file acak.
 
----
+## Cara Menjalankan
 
-## 3. Media Capture API untuk Mengambil Gambar
+1. Install **Laragon** atau **XAMPP**, lalu nyalakan Apache dan MySQL.
+2. Salin seluruh file ke folder `www/todo` (Laragon) atau `htdocs/todo` (XAMPP).
+3. Import `data.sql` melalui HeidiSQL atau phpMyAdmin.
+4. Sesuaikan `DB_USER` dan `DB_PASS` di `config.php` bila perlu (bawaan: `root`, password kosong).
+5. Buka `http://localhost/todo/`.
 
-Pada form todo ditambahkan bagian **Gambar Tugas**. Kamera perangkat diakses menggunakan Media Capture API melalui:
+## Teknologi
 
-```javascript
-navigator.mediaDevices.getUserMedia()
-```
-
-Ketika pengguna memilih **Buka Kamera**, stream kamera ditampilkan pada elemen `<video>`. Setelah itu pengguna dapat menekan **Ambil Gambar**.
-
-Frame dari video kemudian digambar ke `<canvas>` menggunakan:
-
-```javascript
-context.drawImage(
-    cameraPreview,
-    0,
-    0,
-    width,
-    height
-);
-```
-
-Hasil gambar dikonversi menjadi data URL menggunakan:
-
-```javascript
-photoCanvas.toDataURL("image/jpeg", 0.8);
-```
-
-Gambar tersebut kemudian disimpan sebagai bagian dari data todo dan disimpan di IndexedDB.
-
----
-
-## 4. Service Worker
-
-Service Worker ditambahkan melalui file baru bernama `sw.js`. File tersebut didaftarkan pada `script.js` menggunakan:
-
-```javascript
-navigator.serviceWorker.register("./sw.js");
-```
-
-Service Worker digunakan untuk melakukan caching terhadap file utama aplikasi seperti `index.html`, `style.css`, dan `script.js`.
-
-```javascript
-const CACHE_NAME = "todo-mahasiswa-v1";
-```
-
-Dengan adanya Service Worker, aplikasi memiliki mekanisme caching sehingga resource yang sudah disimpan dapat digunakan kembali oleh browser.
-
----
-
-## 5. Waktu Notifikasi Todo
-
-Pada form todo ditambahkan input:
-
-```html
-<input
-    type="datetime-local"
-    id="notifikasi"
-    name="notifikasi">
-```
-
-Input tersebut digunakan untuk menentukan waktu pengingat tugas. Nilainya kemudian disimpan pada properti `notificationTime`.
-
-Aplikasi menggunakan Notification API untuk meminta izin notifikasi:
-
-```javascript
-Notification.requestPermission();
-```
-
-Jika izin diberikan, notifikasi ditampilkan melalui Service Worker menggunakan:
-
-```javascript
-registration.showNotification(...)
-```
-
-Dengan demikian, pengguna dapat memperoleh pengingat ketika waktu yang telah ditentukan untuk tugas telah tercapai.
-
----
-
-## 6. Accessibility
-
-Beberapa perbaikan accessibility ditambahkan pada aplikasi. Salah satunya adalah **skip link**:
-
-```html
-<a class="skip-link" href="#main-content">
-    Lewati ke konten utama
-</a>
-```
-
-Skip link membantu pengguna keyboard langsung menuju bagian utama halaman.
-
-Setiap input juga diberikan label yang sesuai, misalnya:
-
-```html
-<label for="nama-tugas">Nama Tugas</label>
-<input id="nama-tugas">
-```
-
-Selain itu digunakan atribut ARIA seperti `aria-label`, `aria-live`, dan `aria-pressed` untuk memberikan informasi tambahan kepada assistive technology.
-
-CSS juga memberikan indikator ketika elemen mendapatkan focus:
-
-```css
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible {
-    outline: 3px solid #005fcc;
-    outline-offset: 2px;
-}
-```
-
-Aplikasi juga menerapkan `prefers-reduced-motion` untuk pengguna yang memilih mengurangi animasi serta menggunakan `alt` pada gambar agar informasi gambar dapat dipahami oleh screen reader.
-
----
-
-## 7. Responsive Design
-
-CSS juga diperbarui agar aplikasi dapat digunakan pada berbagai ukuran layar. Pada layar dengan lebar maksimal 768px, layout utama diubah dari dua kolom menjadi satu kolom:
-
-```css
-@media (max-width: 768px) {
-    main {
-        flex-direction: column;
-    }
-}
-```
-
-Sehingga, aplikasi nyaman digunakan pada laptop maupun perangkat mobile.
+PHP 8, MySQL, HTML, CSS, JavaScript (Media Capture API, Notification API).

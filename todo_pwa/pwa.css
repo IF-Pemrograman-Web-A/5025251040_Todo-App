@@ -1,0 +1,41 @@
+/* pwa.css : gaya tombol install dan banner offline. */
+
+.header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.header-actions .btn-theme { margin-top: 0; }
+
+.btn-install {
+    border: 1px solid #fff;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-weight: bold;
+    background-color: #1769aa;
+    color: #fff;
+}
+
+.btn-install:hover { background-color: #0f568c; }
+
+/* Atribut hidden harus menang atas display bawaan tombol. */
+.btn-install[hidden],
+.offline-banner[hidden] { display: none; }
+
+.offline-banner {
+    padding: 10px 20px;
+    text-align: center;
+    font-weight: bold;
+    background: #fff3cd;
+    color: #664d03;
+    border-bottom: 2px solid #b78103;
+}
+
+body.dark-mode .offline-banner {
+    background: #5c4400;
+    color: #ffe9a8;
+    border-bottom-color: #ffc107;
+}
